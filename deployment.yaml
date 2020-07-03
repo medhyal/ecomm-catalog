@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecomm-catalog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ecomm-catalog
+  template:
+    metadata:
+      labels:
+        app: ecomm-catalog
+    spec:
+      containers:
+        - name: ecomm-catalog
+          image: __ECR_URL__/ecomm-catalog:latest
+          ports:
+            - containerPort: 8080
+      imagePullSecrets:
+        - name: ecomm-ecr-key
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecomm-catalog
+spec:
+  selector:
+    app: ecomm-catalog
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: LoadBalancer
